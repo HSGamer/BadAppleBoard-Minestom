@@ -8,6 +8,7 @@ import net.minestom.server.command.builder.Command;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.player.PlayerLoginEvent;
+import net.minestom.server.event.player.PlayerTickEvent;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.instance.block.Block;
@@ -31,18 +32,11 @@ public class BadAppleBoard {
         List<Frame> frames = load(inputStream);
         AtomicInteger index = new AtomicInteger(0);
         AtomicBoolean running = new AtomicBoolean(false);
-        AtomicBoolean showTitle = new AtomicBoolean(false);
 
         MinecraftServer minecraftServer = MinecraftServer.init();
 
         Board board = new Board(
-                player -> {
-                    if (!showTitle.get()) {
-                        return Component.text("Bad Apple").color(NamedTextColor.RED);
-                    }
-                    Frame frame = frames.get(index.get());
-                    return frame.getTitle();
-                },
+                player -> Component.text("Bad Apple").color(NamedTextColor.RED),
                 player -> {
                     Frame frame = frames.get(index.get());
                     return frame.getList();
@@ -69,6 +63,10 @@ public class BadAppleBoard {
             event.setSpawningInstance(instanceContainer);
             player.setRespawnPoint(new Pos(0, 42, 0));
         });
+        node.addListener(PlayerTickEvent.class, event -> {
+           if (!running.get()) return;
+           event.getPlayer().sendActionBar(frames.get(index.get()).getLyric());
+        });
 
         Consumer<CommandSender> addPlayer = sender -> {
             if (sender instanceof Player player) {
@@ -82,10 +80,6 @@ public class BadAppleBoard {
             addPlayer.accept(sender);
         });
         MinecraftServer.getCommandManager().register(command);
-
-        Command showTitleCommand = new Command("showTitle");
-        showTitleCommand.setDefaultExecutor((sender, context) -> showTitle.set(!showTitle.get()));
-        MinecraftServer.getCommandManager().register(showTitleCommand);
 
         Command stopCommand = new Command("stop");
         stopCommand.setDefaultExecutor((sender, context) -> MinecraftServer.stopCleanly());
@@ -108,7 +102,7 @@ public class BadAppleBoard {
                     frame.add(Component.text(line).color(NamedTextColor.WHITE));
                 }
                 if (i == 10) {
-                    frame.setTitle(Component.text(line).color(NamedTextColor.WHITE));
+                    frame.setLyric(Component.text(line).color(NamedTextColor.WHITE));
                 }
                 if (i == 12) {
                     list.add(frame);

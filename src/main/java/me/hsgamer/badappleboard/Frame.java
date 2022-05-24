@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Frame {
     private final List<Component> list = new ArrayList<>();
-    private Component title;
+    private Component lyric;
 
     public List<Component> getList() {
         return list;
@@ -21,11 +21,11 @@ public class Frame {
         list.clear();
     }
 
-    public Component getTitle() {
-        return title;
+    public Component getLyric() {
+        return lyric;
     }
 
-    public void setTitle(Component title) {
-        this.title = title;
+    public void setLyric(Component lyric) {
+        this.lyric = lyric;
     }
 }
