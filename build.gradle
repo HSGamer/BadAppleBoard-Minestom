@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+group 'me.hsgamer'
+version '1.0-SNAPSHOT'
+
+tasks {
+    compileJava {
+        dependsOn(tasks.clean)
+    }
+    build {
+        dependsOn(tasks.shadowJar)
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.codemc.io/repository/maven-public/'}
+}
+
+dependencies {
+    implementation "me.hsgamer:hscore-common:4.0.8"
+    implementation "com.github.Minestom:Minestom:f5dc048185"
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'me.hsgamer.badappleboard.BadAppleBoard', "Multi-Release": true
+    }
+}
