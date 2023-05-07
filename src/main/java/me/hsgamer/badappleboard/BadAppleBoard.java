@@ -91,6 +91,7 @@ public class BadAppleBoard {
         MinecraftServer.getCommandManager().register(stopCommand);
 
         minecraftServer.start("0.0.0.0", 25565);
+        Runtime.getRuntime().addShutdownHook(new Thread(MinecraftServer::stopCleanly));
     }
 
     private static List<Frame> load(InputStream inputStream) {
