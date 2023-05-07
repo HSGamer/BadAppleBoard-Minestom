@@ -87,7 +87,7 @@ public class BadAppleBoard {
         MinecraftServer.getCommandManager().register(command);
 
         Command stopCommand = new Command("stop");
-        stopCommand.setDefaultExecutor((sender, context) -> MinecraftServer.stopCleanly());
+        stopCommand.setDefaultExecutor((sender, context) -> System.exit(0));
         MinecraftServer.getCommandManager().register(stopCommand);
 
         minecraftServer.start("0.0.0.0", 25565);
