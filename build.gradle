@@ -22,8 +22,9 @@ repositories {
 }
 
 dependencies {
-    implementation "me.hsgamer:hscore-common:4.0.8"
-    implementation "com.github.Minestom:Minestom:f5dc048185"
+    implementation "me.hsgamer:hscore-minestom-board:4.3.3-SNAPSHOT"
+    implementation "me.hsgamer:hscore-common:4.3.3-SNAPSHOT"
+    implementation "dev.hollowcube:minestom-ce:381d89497a"
 }
 
 jar {

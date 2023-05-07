@@ -1,5 +1,6 @@
 package me.hsgamer.badappleboard;
 
+import me.hsgamer.hscore.minestom.board.Board;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
@@ -44,7 +45,11 @@ public class BadAppleBoard {
         );
         var node = MinecraftServer.getGlobalEventHandler();
         Board.hook(node);
-        MinecraftServer.getSchedulerManager().scheduleTask(board::updateAll, TaskSchedule.immediate(), TaskSchedule.nextTick());
+        MinecraftServer.getSchedulerManager().scheduleTask(() -> {
+            for (Player player : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
+                board.update(player);
+            }
+        }, TaskSchedule.immediate(), TaskSchedule.nextTick());
         MinecraftServer.getSchedulerManager().scheduleTask(() -> {
             if (!running.get()) {
                 return;
