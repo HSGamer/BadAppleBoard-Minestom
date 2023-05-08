@@ -44,11 +44,14 @@ public class BadAppleBoard {
         var node = MinecraftServer.getGlobalEventHandler();
         Board.hook(node);
         MinecraftServer.getSchedulerManager().scheduleTask(() -> {
-            if (!running.get()) {
-                return;
-            }
             for (Player player : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
                 board.update(player);
+                player.sendActionBar(frames.get(index.get()).getLyric());
+            }
+        }, TaskSchedule.immediate(), TaskSchedule.nextTick());
+        MinecraftServer.getSchedulerManager().scheduleTask(() -> {
+            if (!running.get()) {
+                return;
             }
             index.getAndIncrement();
             if (index.get() >= frames.size()) {
@@ -63,10 +66,6 @@ public class BadAppleBoard {
             final Player player = event.getPlayer();
             event.setSpawningInstance(instanceContainer);
             player.setRespawnPoint(new Pos(0, 42, 0));
-        });
-        node.addListener(PlayerTickEvent.class, event -> {
-           if (!running.get()) return;
-           event.getPlayer().sendActionBar(frames.get(index.get()).getLyric());
         });
 
         Command command = new Command("start");
