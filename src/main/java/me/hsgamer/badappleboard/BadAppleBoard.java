@@ -4,7 +4,6 @@ import me.hsgamer.hscore.minestom.board.Board;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 public class BadAppleBoard {
     public static void main(String[] args) {
@@ -73,17 +71,8 @@ public class BadAppleBoard {
            event.getPlayer().sendActionBar(frames.get(index.get()).getLyric());
         });
 
-        Consumer<CommandSender> addPlayer = sender -> {
-            if (sender instanceof Player player) {
-                board.addPlayer(player);
-            }
-        };
-
         Command command = new Command("start");
-        command.setDefaultExecutor((sender, context) -> {
-            running.set(!running.get());
-            addPlayer.accept(sender);
-        });
+        command.setDefaultExecutor((sender, context) -> running.set(!running.get()));
         MinecraftServer.getCommandManager().register(command);
 
         Command stopCommand = new Command("stop");
