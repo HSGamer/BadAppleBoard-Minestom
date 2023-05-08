@@ -44,13 +44,11 @@ public class BadAppleBoard {
         var node = MinecraftServer.getGlobalEventHandler();
         Board.hook(node);
         MinecraftServer.getSchedulerManager().scheduleTask(() -> {
-            for (Player player : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
-                board.update(player);
-            }
-        }, TaskSchedule.immediate(), TaskSchedule.nextTick());
-        MinecraftServer.getSchedulerManager().scheduleTask(() -> {
             if (!running.get()) {
                 return;
+            }
+            for (Player player : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
+                board.update(player);
             }
             index.getAndIncrement();
             if (index.get() >= frames.size()) {
