@@ -23,8 +23,8 @@ repositories {
 }
 
 dependencies {
-    implementation "me.hsgamer:hscore-minestom-board:4.3.4-SNAPSHOT"
-    implementation "dev.hollowcube:minestom-ce:381d89497a"
+    implementation "me.hsgamer:hscore-minestom-board:4.3.7"
+    implementation 'dev.hollowcube:minestom-ce:197371a35e'
     implementation "org.slf4j:slf4j-simple:2.0.7"
 }
 
