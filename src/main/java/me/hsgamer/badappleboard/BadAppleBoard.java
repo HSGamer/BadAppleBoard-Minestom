@@ -31,7 +31,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class BadAppleBoard {
     public static void main(String[] args) {
-        System.setProperty("minestom.tps", "35");
         List<Frame> frames;
         if (Boolean.getBoolean("badapple.plain")) {
             System.setProperty("minestom.tps", "35");
