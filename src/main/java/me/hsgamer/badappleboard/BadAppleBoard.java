@@ -1,5 +1,11 @@
 package me.hsgamer.badappleboard;
 
+import fr.noop.subtitle.model.SubtitleCue;
+import fr.noop.subtitle.model.SubtitleLine;
+import fr.noop.subtitle.model.SubtitleParsingException;
+import fr.noop.subtitle.model.SubtitleText;
+import fr.noop.subtitle.srt.SrtObject;
+import fr.noop.subtitle.srt.SrtParser;
 import me.hsgamer.hscore.minestom.board.Board;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -26,8 +32,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BadAppleBoard {
     public static void main(String[] args) {
         System.setProperty("minestom.tps", "35");
-        InputStream inputStream = BadAppleBoard.class.getClassLoader().getResourceAsStream("badapple_en.txt");
-        List<Frame> frames = load(inputStream);
+        List<Frame> frames;
+        if (Boolean.getBoolean("badapple.plain")) {
+            System.setProperty("minestom.tps", "35");
+            frames = loadPlain();
+        } else {
+            System.setProperty("minestom.tps", "30");
+            frames = loadSRT();
+        }
         AtomicInteger index = new AtomicInteger(0);
         AtomicBoolean running = new AtomicBoolean(false);
 
@@ -79,7 +91,8 @@ public class BadAppleBoard {
         Runtime.getRuntime().addShutdownHook(new Thread(MinecraftServer::stopCleanly));
     }
 
-    private static List<Frame> load(InputStream inputStream) {
+    private static List<Frame> loadPlain() {
+        InputStream inputStream = BadAppleBoard.class.getClassLoader().getResourceAsStream("badapple_en.txt");
         List<Frame> list = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             int i = 0;
@@ -102,6 +115,34 @@ public class BadAppleBoard {
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
+            e.printStackTrace();
+            list.forEach(Frame::clear);
+            list.clear();
+        }
+        return list;
+    }
+
+    private static List<Frame> loadSRT() {
+        InputStream inputStream = BadAppleBoard.class.getClassLoader().getResourceAsStream("badapple.srt");
+        List<Frame> list = new ArrayList<>();
+        SrtParser parser = new SrtParser(StandardCharsets.UTF_8.name());
+        try {
+            SrtObject subtitle = parser.parse(inputStream);
+            for (SubtitleCue cue : subtitle.getCues()) {
+                List<SubtitleLine> lines = cue.getLines();
+                Frame frame = new Frame();
+                for (SubtitleLine line : lines) {
+                    StringBuilder builder = new StringBuilder();
+                    for (SubtitleText s : line.getTexts()) {
+                        builder.append(s.toString());
+                    }
+                    String text = builder.toString();
+                    frame.add(Component.text(text).color(NamedTextColor.WHITE));
+                }
+                frame.setLyric(Component.empty());
+                list.add(frame);
+            }
+        } catch (IOException | SubtitleParsingException e) {
             e.printStackTrace();
             list.forEach(Frame::clear);
             list.clear();

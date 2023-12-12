@@ -23,9 +23,10 @@ repositories {
 }
 
 dependencies {
-    implementation "me.hsgamer:hscore-minestom-board:4.3.7"
-    implementation 'dev.hollowcube:minestom-ce:197371a35e'
+    implementation "me.hsgamer:hscore-minestom-board:4.3.21"
+    implementation 'dev.hollowcube:minestom-ce:1554487748'
     implementation "org.slf4j:slf4j-simple:2.0.7"
+    implementation 'fr.noop:subtitle:0.9.0'
 }
 
 jar {
